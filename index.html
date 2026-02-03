@@ -264,46 +264,43 @@
         <>
           {/* Partners buttons ABOVE game button on right */}
           <div className="fixed bottom-20 right-4 z-50 flex flex-col gap-3">
-            <button
-              onClick={() => handleOpen('feed')}
-              className="bg-white text-orange-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-orange-200 flex items-center gap-2 active:scale-95 transition"
-            >
-              <span>Feed Partner</span>
-              <div className="icon-bone text-lg"></div>
-            </button>
+      <button
+        onClick={handleOpen}  // no need for 'feed' anymore
+        className="bg-white text-blue-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-blue-200 flex items-center gap-2 active:scale-95 transition"
+      >
+        <span>დაკარგულები</span>
+        <div className="icon-party-popper text-lg"></div>
+      </button>
+    </div>
 
+    {isOpen && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        onClick={handleClose}
+      >
+        <div className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[85vh]">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+            <span className="font-bold text-gray-700">Play Partner</span>
             <button
-              onClick={() => handleOpen('play')}
-              className="bg-white text-blue-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-blue-200 flex items-center gap-2 active:scale-95 transition"
+              onClick={() => setIsOpen(false)}
+              className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
             >
-              <span>Play Partner</span>
-              <div className="icon-party-popper text-lg"></div>
+              <div className="icon-x"></div>
             </button>
           </div>
-
-          {isOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={handleClose}>
-              <div className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[85vh]">
-                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-                  <span className="font-bold text-gray-700">{activeAction === 'feed' ? 'Feed Partner' : 'Play Partner'}</span>
-                  <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                    <div className="icon-x"></div>
-                  </button>
-                </div>
-                <div className="flex-1 bg-gray-100">
-                  <iframe
-                    src={activeAction === 'feed' ? "https://www.wikipedia.org" : "https://www.wikipedia.org"}
-                    title="Partner Page"
-                    className="w-full h-full min-h-[400px]"
-                    loading="lazy"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      );
-    }
+          <div className="flex-1 bg-gray-100">
+            <iframe
+              src="https://www.wikipedia.org"  // <-- CHANGE THIS TO YOUR PLAY PARTNER LINK
+              title="Play Partner Page"
+              className="w-full h-full min-h-[400px]"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
+);
 
     // ---------------------- Footer ----------------------
     function Footer() {
