@@ -38,7 +38,6 @@
   <div id="root"></div>
 
   <script type="text/babel">
-
     // ---------------------- Header ----------------------
     function Header() {
       return (
@@ -176,67 +175,7 @@
       );
     }
 
-    // ---------------------- Partners ----------------------
-    function Partners() {
-      const [isOpen, setIsOpen] = React.useState(false);
-      const [activeAction, setActiveAction] = React.useState(null);
-
-      const handleOpen = (action) => {
-        setActiveAction(action);
-        setIsOpen(true);
-      };
-
-      const handleClose = (e) => {
-        if(e.target === e.currentTarget) setIsOpen(false);
-      };
-
-      return (
-        <>
-          {/* Partners buttons fixed bottom-left and bottom-right */}
-          <button
-            onClick={() => handleOpen('feed')}
-            className="fixed bottom-6 left-4 z-40 bg-white text-orange-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-orange-200 flex items-center gap-2 active:scale-95 transition"
-          >
-            <span>Feed Partner</span>
-            <div className="icon-bone text-lg"></div>
-          </button>
-
-          <button
-            onClick={() => handleOpen('play')}
-            className="fixed bottom-6 right-4 z-40 bg-white text-blue-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-blue-200 flex items-center gap-2 active:scale-95 transition"
-          >
-            <span>Play Partner</span>
-            <div className="icon-party-popper text-lg"></div>
-          </button>
-
-          {/* Modal */}
-          {isOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={handleClose}>
-              <div className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[85vh]">
-                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-                  <span className="font-bold text-gray-700">{activeAction === 'feed' ? 'Feed Partner' : 'Play Partner'}</span>
-                  <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                    <div className="icon-x"></div>
-                  </button>
-                </div>
-                <div className="flex-1 bg-gray-100">
-                  <iframe
-                    src={activeAction === 'feed' ? "https://www.wikipedia.org" : "https://www.wikipedia.org"}
-                    title="Partner Page"
-                    className="w-full h-full min-h-[400px]"
-                    loading="lazy"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      );
-    }
-
-    // ---------------------- PetInteraction (game) ----------------------
-    // ... Keep your existing PetInteraction code exactly as before
-
+    // ---------------------- PetInteraction ----------------------
     function PetInteraction() {
       const GAME_DURATION = 20;
       const [foods, setFoods] = React.useState([]);
@@ -287,7 +226,81 @@
               </div>
             </div>
           )}
-          {/* ... Add finished modal and food animation exactly as before ... */}
+          {gameStatus==='idle' && (
+            <button onClick={handleInteraction} className="fixed bottom-6 right-4 z-40 bg-white text-amber-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-amber-100 flex items-center gap-2 active:scale-95 transition animate-pop">
+              <span className="text-sm">Feed & Play?</span>
+              <div className="icon-paw-print text-lg"></div>
+            </button>
+          )}
+          {gameStatus==='playing' && (
+            <button onClick={handleInteraction} className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 bg-amber-500 hover:bg-amber-600 text-white w-24 h-24 rounded-full shadow-2xl border-4 border-white transition-all active:scale-90 active:rotate-12 group flex items-center justify-center animate-pop" aria-label="Feed">
+              <div className="icon-bone text-4xl group-active:scale-125 transition-transform"></div>
+            </button>
+          )}
+          <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" data-name="food-rain-container">
+            {foods.map(food=>(
+              <div key={food.id} className="absolute -top-10 animate-drop" style={{left:`${food.left}%`, fontSize:`${food.size}rem`}}>{food.icon}</div>
+            ))}
+          </div>
+        </>
+      );
+    }
+
+    // ---------------------- Partners ----------------------
+    function Partners() {
+      const [isOpen, setIsOpen] = React.useState(false);
+      const [activeAction, setActiveAction] = React.useState(null);
+
+      const handleOpen = (action) => {
+        setActiveAction(action);
+        setIsOpen(true);
+      };
+
+      const handleClose = (e) => {
+        if(e.target === e.currentTarget) setIsOpen(false);
+      };
+
+      return (
+        <>
+          {/* Partners buttons ABOVE game button on right */}
+          <div className="fixed bottom-20 right-4 z-50 flex flex-col gap-3">
+            <button
+              onClick={() => handleOpen('feed')}
+              className="bg-white text-orange-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-orange-200 flex items-center gap-2 active:scale-95 transition"
+            >
+              <span>Feed Partner</span>
+              <div className="icon-bone text-lg"></div>
+            </button>
+
+            <button
+              onClick={() => handleOpen('play')}
+              className="bg-white text-blue-600 font-bold py-3 px-5 rounded-2xl shadow-xl border border-blue-200 flex items-center gap-2 active:scale-95 transition"
+            >
+              <span>Play Partner</span>
+              <div className="icon-party-popper text-lg"></div>
+            </button>
+          </div>
+
+          {isOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={handleClose}>
+              <div className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[85vh]">
+                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                  <span className="font-bold text-gray-700">{activeAction === 'feed' ? 'Feed Partner' : 'Play Partner'}</span>
+                  <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    <div className="icon-x"></div>
+                  </button>
+                </div>
+                <div className="flex-1 bg-gray-100">
+                  <iframe
+                    src={activeAction === 'feed' ? "https://www.wikipedia.org" : "https://www.wikipedia.org"}
+                    title="Partner Page"
+                    className="w-full h-full min-h-[400px]"
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       );
     }
@@ -315,8 +328,8 @@
           <Contact />
           <Health />
           <Gallery />
-          <PetInteraction />
-          <Partners />
+          <PetInteraction />  {/* game button stays */}
+          <Partners />        {/* partners button above game button */}
           <Footer />
         </div>
       );
